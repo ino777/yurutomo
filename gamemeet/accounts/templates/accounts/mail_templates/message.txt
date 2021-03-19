@@ -1,0 +1,7 @@
+Dear {{ user.username }}
+
+Thank you for sign up for Gamemeet !
+
+Click here to complete signing up and getting started.
+
+{{ protocol }}://{{ domain }}{% url 'accounts:signup_complete' token %}

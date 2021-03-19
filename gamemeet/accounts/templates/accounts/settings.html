@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="row">
+            <div class="field">
+                {{ field.label }}
+            </div>
+            <div class="field">
+                {{ field }}
+            </div>
+            <div class="field">
+                {% if field.help_text %}
+                <span class="field_help_text">{{ field.help_text}}</span>
+                {% endif %}
+            </div>
+            <div class="field">
+                {{ field.errors }}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class=""><button type="submit" class="btn">Confirm</button></div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

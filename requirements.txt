@@ -1,0 +1,6 @@
+django
+channels
+channels-redis
+django-imagekit
+Pillow
+requests
