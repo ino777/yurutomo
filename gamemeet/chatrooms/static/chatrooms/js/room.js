@@ -1,4 +1,7 @@
 let num = 0;
+
+Vue.use(VueContextMenu)
+
 const room = new Vue({
     delimiters: ['[[', ']]'],
     el: "#room",
@@ -33,6 +36,11 @@ const room = new Vue({
         },
         streams: {},       // 相手（複数）のストリーム
         soundThreshold: 0.01,
+
+        ctxDatas: {     // コンテキストメニューで扱う情報
+            id: "",
+            isMuted: false,
+        },
 
         // チャット
         myText: "",         // 自分のテキスト
@@ -144,6 +152,12 @@ const room = new Vue({
         // ストリームをミュート
         muteStream: function (stream) {
             stream.stream.getAudioTracks().forEach((track) => (track.enabled = !stream.isMuted));
+        },
+
+        // コンテキストメニュー表示時
+        onCtxOpen: function (datas) {
+            this.ctxDatas.id = datas.id;
+            this.ctxDatas.isMuted = datas.isMuted;
         },
 
         // メッセージを送信

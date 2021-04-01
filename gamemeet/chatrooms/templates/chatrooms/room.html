@@ -10,6 +10,7 @@
 
 <!-- Vue.js 開発ver -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-context-menu@2.0.6/vue-context-menu.min.js"></script>
 
 <!-- Vue.js 本番環境ver バージョンを指定する -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
@@ -141,12 +142,16 @@
                     </div>
                 </div>
 
-                <div class="stream remote-stream" v-for="(stream, id) in streams">
+                <div class="stream remote-stream" v-for="(stream, id) in streams"
+                    @contextmenu.prevent="$refs.ctx.open($event, {id: id, isMuted: stream.isMuted})">
                     <audio autoplay playsinline :src-object.prop="stream.stream"></audio>
                     <div class="stream-img remote-stream-img" :class="{'stream-on-sound': stream.onSound}"></div>
-                    <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]]</div>
-
+                    <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]][[stream.isMuted]]</div>
                 </div>
+                <context-menu ref="ctx" @ctx-open="onCtxOpen">
+                    <li class="ctx-item" v-if="ctxDatas.isMuted" @click="streams[ctxDatas.id].isMuted=false">ミュート解除</li>
+                    <li class="ctx-item" v-else @click="streams[ctxDatas.id].isMuted=true">ミュート</li>
+                </context-menu>
                 <button @click="getLog">Log</button>
             </div>
         </div>
