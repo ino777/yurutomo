@@ -95,9 +95,7 @@
                     <div class="message-container" v-for="message in messages">
                         <div class="message" v-if="message.type=='message'">
                             <div class="message-icon">
-                                <div
-                                    style="width: 30px; height: 30px; background: aqua; border-radius: 50%; margin: auto;">
-                                </div>
+                                <img :src="memberIcons[message.srcUserId]" class="message-icon-img">
                             </div>
                             <div class="message-body">
                                 <div class="message-user">[[message.srcUser]]</div>
@@ -139,7 +137,10 @@
             <div class="streams">
                 <div class="stream local-stream">
                     <audio id="my-video" autoplay playsinline :src-object.prop="localStream.stream"></audio>
-                    <div class="stream-img local-stream-img" :class="{'stream-on-sound' : localStream.onSound}"></div>
+                    <div>
+                        <img src="{{user.icon_image.url}}" class="stream-img local-stream-img"
+                            :class="{'stream-on-sound' : localStream.onSound}">
+                    </div>
                     <!-- 環境によって srcObject.prop と src-object.prop のどちらかで動く模様 -->
                     <!-- <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="localStream"></video> -->
                     <div class="stream-name">[[ truncateName("{{ user.username }}") ]]
@@ -149,8 +150,11 @@
                 <div class="stream remote-stream" v-for="(stream, id) in streams"
                     @contextmenu.prevent="$refs.ctx.open($event, {id: id, isMuted: stream.isMuted})">
                     <audio autoplay playsinline :src-object.prop="stream.stream"></audio>
-                    <div class="stream-img remote-stream-img" :class="{'stream-on-sound': stream.onSound}"></div>
-                    <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]][[stream.isMuted]]</div>
+                    <div>
+                        <img :src="memberIcons[id]" class="stream-img remote-stream-img"
+                            :class="{'stream-on-sound': stream.onSound}">
+                    </div>
+                    <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]][[stream.isMuted]] </div>
                 </div>
                 <context-menu ref="ctx" @ctx-open="onCtxOpen">
                     <li class="ctx-item" v-if="ctxDatas.isMuted" @click="switchMute(streams[ctxDatas.id])">ミュート解除</li>
@@ -167,6 +171,7 @@
     const userId = "{{user.uuid}}";
     const roomId = "{{room.uuid}}";
     const memberNames = JSON.parse("{{member_names}}".replace(/&quot;/g, "\""));
+    const memberIcons = JSON.parse("{{member_icons}}".replace(/&quot;/g, "\""));
     const indexUrl = "{% url 'chatrooms:index' %}";
 </script>
 <script type="text/javascript" src="{% static 'chatrooms/js/room.js' %}"></script>

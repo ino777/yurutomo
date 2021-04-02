@@ -46,9 +46,15 @@ class RoomView(LoginRequiredMixin, UserPassesTestMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         room = get_object_or_404(Room, pk=self.kwargs['pk'])
         context['room'] = room
+
         members = room.users.all()
+
         member_names = {str(member.uuid): member.username for member in members}
         context['member_names'] = json.dumps(member_names)
+
+        member_icons = {str(member.uuid): member.icon_image.url for member in members}
+        context['member_icons'] = json.dumps(member_icons)
+
         return context
 
 class RoomListView(generic.ListView):

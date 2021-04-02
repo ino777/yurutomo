@@ -26,6 +26,8 @@ const room = new Vue({
         // Roomメンバーの情報
         // Peer ID とユーザーネームの対応表
         memberNames: memberNames,
+        // Peer ID とアイコン画像の対応表
+        memberIcons: memberIcons,
 
         // ストリーム
         localStream: {    // 自分のストリーム
@@ -170,6 +172,7 @@ const room = new Vue({
             this.messages.push(
                 {
                     type: "message",
+                    srcUserId: this.peer.id,
                     srcUser: this.memberNames[this.peer.id],
                     data: this.myText
                 }
@@ -332,6 +335,7 @@ const room = new Vue({
                 this.messages.push(
                     {
                         type: "message",
+                        srcUserId: src,
                         srcUser: srcUser,
                         data: data,
                     }
