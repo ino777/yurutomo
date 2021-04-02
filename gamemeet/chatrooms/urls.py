@@ -15,6 +15,6 @@ urlpatterns = [
     path('api/unregistermatching', views.unregister_matching, name='unregister_matching'),
     path('api/getmatchroom', views.get_match_room, name='get_match_room'),
     path('api/confirmmatching', views.confirm_matching, name='confirm_matching'),
-    path('api.cancel_confirm', views.cancel_confirm, name='cancel_confirm'),
+    path('api/cancel_confirm', views.cancel_confirm, name='cancel_confirm'),
     path('api/getmatchcompleted', views.get_match_completed, name='get_match_completed'),
 ]
