@@ -118,7 +118,7 @@ const room = new Vue({
 
                     // ミュート設定
                     if (this.localStream.isMuted) {
-                        this.muteStream(this.localStream);
+                        this.switchMuteStream(this.localStream);
                     }
 
                     // 発言中かを判定
@@ -146,11 +146,11 @@ const room = new Vue({
         // ミュートの切り替え
         switchMute: function (stream) {
             this.$set(stream, "isMuted", !stream.isMuted);
-            this.muteStream(stream);
+            this.switchMuteStream(stream);
         },
 
-        // ストリームをミュート
-        muteStream: function (stream) {
+        // ストリームのミュート切り替え
+        switchMuteStream: function (stream) {
             stream.stream.getAudioTracks().forEach((track) => (track.enabled = !stream.isMuted));
         },
 
@@ -315,10 +315,10 @@ const room = new Vue({
                     }
                 )
 
-                // // ミュート設定
-                // if (this.streams[stream.peerId].isMuted) {
-                //     this.muteStream(this.streams[stream.peerId]);
-                // }
+                // ミュート設定
+                if (this.streams[stream.peerId].isMuted) {
+                    this.switchMuteStream(this.streams[stream.peerId]);
+                }
 
                 // 発言中かを判定
                 this.detectSound(this.streams[stream.peerId])

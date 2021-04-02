@@ -149,8 +149,8 @@
                     <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]][[stream.isMuted]]</div>
                 </div>
                 <context-menu ref="ctx" @ctx-open="onCtxOpen">
-                    <li class="ctx-item" v-if="ctxDatas.isMuted" @click="streams[ctxDatas.id].isMuted=false">ミュート解除</li>
-                    <li class="ctx-item" v-else @click="streams[ctxDatas.id].isMuted=true">ミュート</li>
+                    <li class="ctx-item" v-if="ctxDatas.isMuted" @click="switchMute(streams[ctxDatas.id])">ミュート解除</li>
+                    <li class="ctx-item" v-else @click="switchMute(streams[ctxDatas.id])">ミュート</li>
                 </context-menu>
                 <button @click="getLog">Log</button>
             </div>
