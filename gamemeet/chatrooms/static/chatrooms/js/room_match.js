@@ -152,7 +152,7 @@ const app = new Vue({
                 axios.get(this.url.getMatchRoom)
                     .then((result) => {
                         // マッチングした場合
-                        if (result.data.room_id) {
+                        if (result.data.is_matched) {
                             this.roomId = result.data.room_id;
                             this.roomUrl = result.data.room_url;
                             console.log(this.roomId);

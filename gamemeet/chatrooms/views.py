@@ -157,6 +157,7 @@ def get_match_room(request):
         myrecord.is_pending = True
         myrecord.save()
         return JsonResponse({
+            'is_matched': True,
             'room_id': str(room.pk),
             'room_url': reverse_lazy('chatrooms:room', kwargs={'pk': room.pk})
             },
@@ -175,7 +176,10 @@ def get_match_room(request):
 
     # クエリセットが条件の数より少ない場合は不適
     if match_records.count() < myrecord.number:
-        return JsonResponse({'message': 'not matched.'}, status=200)
+        return JsonResponse({
+            'is_matched': False,
+            'message': 'not matched.'
+            }, status=200)
 
     # クエリセットを条件の数に制限
     match_records = match_records[:myrecord.number]
@@ -185,7 +189,10 @@ def get_match_room(request):
 
     # 自分が入っていない場合は不適
     if not user_id in match_users_id:
-        return JsonResponse({'message': 'not matched.'}, status=200)
+        return JsonResponse({
+            'is_matched': False,
+            'message': 'not matched.'
+            }, status=200)
 
 
     '''
@@ -208,6 +215,7 @@ def get_match_room(request):
     myrecord.save()
     
     return JsonResponse({
+        'is_matched': True,
         'room_id': str(room.pk),
         'room_url': reverse_lazy('chatrooms:room', kwargs={'pk': room.pk})
         },
@@ -256,7 +264,7 @@ def get_match_completed(request):
             'is_completed': False,
             'is_cancelled': False,
             'message': 'invalid room id.'
-        }, status=400)
+            }, status=400)
     
     room = Room.objects.filter(pk=room_id, users=user_id).first()
     if room is None:
@@ -264,7 +272,7 @@ def get_match_completed(request):
             'is_completed': False,
             'is_cancelled': False,
             'message': 'invalid room id.'
-        }, status=400)
+            }, status=400)
 
     users = room.users.all()
 
@@ -278,14 +286,14 @@ def get_match_completed(request):
                 'is_cancelled': False,
                 'message': 'error',
                 'error': ex
-            }, status=500)
+                }, status=500)
         except Exception as ex:
             return JsonResponse({
                 'is_completed': False,
                 'is_cancelled': False,
                 'message': 'error',
                 'error': ex
-            }, status=500)
+                }, status=500)
         
         # レコードが見つからない場合
         if record is None:
@@ -293,7 +301,7 @@ def get_match_completed(request):
                 'is_completed': False,
                 'is_cancelled': False,
                 'message': 'record is not found.'
-            }, status=404)
+                }, status=404)
         
         # キャンセル処理
         if not record.is_active:
@@ -303,7 +311,7 @@ def get_match_completed(request):
                 'is_completed': False,
                 'is_cancelled': True,
                 'message': 'matching cancelled.'
-            }, status=200)
+                }, status=200)
 
         # 未完了
         if not record.is_confirmed:
@@ -311,10 +319,10 @@ def get_match_completed(request):
                 'is_completed': False,
                 'is_cancelled': False,
                 'message': 'not confirmed.'
-            }, status=200)
+                }, status=200)
     
     return JsonResponse({
         'is_completed': True,
         'is_cancelled': False,
         'message': 'matching done.'
-    }, status=200)
+        }, status=200)
