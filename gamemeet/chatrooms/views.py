@@ -3,6 +3,7 @@ import requests
 from django.shortcuts import render
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import QueryDict
 from django.http.response import JsonResponse, HttpResponse
@@ -80,6 +81,7 @@ Ajax で Json の送受信をすることを前提に書いている
 '''
 
 # マッチングに登録
+@login_required
 def register_matching(request):
     json_data = json.loads(request.body)
     user_id = request.user.pk
@@ -114,6 +116,7 @@ def register_matching(request):
 
 
 # マッチングを登録解除
+@login_required
 def unregister_matching(request):
     json_data = json.loads(request.body)
     user_id = request.user.pk
@@ -132,6 +135,7 @@ def unregister_matching(request):
 
 
 # マッチングしたルームIDを返す
+@login_required
 def get_match_room(request):
     user_id = request.user.pk
 
@@ -211,6 +215,7 @@ def get_match_room(request):
 
 
 # マッチングを承認する
+@login_required
 def confirm_matching(request):
     json_data = json.loads(request.body)
     user_id = request.user.pk
@@ -225,6 +230,7 @@ def confirm_matching(request):
     return JsonResponse({'is_confirmed': True}, status=200)
 
 # マッチング承認をキャンセルして再び待ち状態へ
+@login_required
 def cancel_confirm(request):
     json_data = json.loads(request.body)
     user_id = request.user.pk
@@ -240,6 +246,7 @@ def cancel_confirm(request):
 
 # 他のユーザーがマッチングを承認したか
 # 全員承認していればマッチング完了
+@login_required
 def get_match_completed(request):
     user_id = request.user.pk
 
