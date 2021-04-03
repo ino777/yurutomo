@@ -252,11 +252,19 @@ def get_match_completed(request):
 
     room_id = request.GET.get('room_id')
     if room_id is None or not room_id:
-        return JsonResponse({'message': 'invalid room id.'}, status=400)
+        return JsonResponse({
+            'is_completed': False,
+            'is_cancelled': False,
+            'message': 'invalid room id.'
+        }, status=400)
     
     room = Room.objects.filter(pk=room_id, users=user_id).first()
     if room is None:
-        return JsonResponse({'message': 'invalid room id.'}, status=400)
+        return JsonResponse({
+            'is_completed': False,
+            'is_cancelled': False,
+            'message': 'invalid room id.'
+        }, status=400)
 
     users = room.users.all()
 
@@ -265,17 +273,48 @@ def get_match_completed(request):
             record = MatchingRecord.objects.filter(user=user.pk).first()
         except User.matchingrecord.RelatedObjectDoesNotExist as ex:
             print('User.matchingrecord.RelatedObjectDoesNotExist')
-            return JsonResponse({'message': 'error', 'error': ex}, status=500)
+            return JsonResponse({
+                'is_completed': False,
+                'is_cancelled': False,
+                'message': 'error',
+                'error': ex
+            }, status=500)
         except Exception as ex:
-            return JsonResponse({'message': 'error', 'error': ex}, status=500)
+            return JsonResponse({
+                'is_completed': False,
+                'is_cancelled': False,
+                'message': 'error',
+                'error': ex
+            }, status=500)
+        
+        # レコードが見つからない場合
+        if record is None:
+            return JsonResponse({
+                'is_completed': False,
+                'is_cancelled': False,
+                'message': 'record is not found.'
+            }, status=404)
         
         # キャンセル処理
         if not record.is_active:
             room.is_active = False
             room.save()
-            return JsonResponse({'is_cancelled': True}, status=200)
+            return JsonResponse({
+                'is_completed': False,
+                'is_cancelled': True,
+                'message': 'matching cancelled.'
+            }, status=200)
+
         # 未完了
         if not record.is_confirmed:
-            return JsonResponse({'is_completed': False}, status=200)
+            return JsonResponse({
+                'is_completed': False,
+                'is_cancelled': False,
+                'message': 'not confirmed.'
+            }, status=200)
     
-    return JsonResponse({'is_completed': True}, status=200)
+    return JsonResponse({
+        'is_completed': True,
+        'is_cancelled': False,
+        'message': 'matching done.'
+    }, status=200)
