@@ -28,23 +28,32 @@
                     <div class="uk-navbar-left">
 
                         <ul class="uk-navbar-nav">
-                            <li class="uk-active"><a href="#">Active</a></li>
+                            <li class="uk-active"><a href="{% url 'chatrooms:index' %}">LOGO</a></li>
 
                         </ul>
 
                     </div>
                     <div class="uk-navbar-right">
                         <ul class="uk-navbar-nav">
+                            {% if user.is_authenticated %}
                             <li>
-                                <a href="#">Account</a>
+                                <a href="#">
+                                        <img src="{{user.icon_image.url}}" style="width: 50px; height: 50px; border-radius: 50%;" >
+                                </a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
-                                        <li class="uk-active"><a href="#">Active</a></li>
-                                        <li><a href="#">Item</a></li>
-                                        <li><a href="#">Item</a></li>
+                                        <li class="uk-active">{{user.username}}</li>
+                                        <li class="uk-nav-divider"></li>
+                                        <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">Profile</a></li>
+                                        <li><a href="{% url 'logout' %}">Logout</a></li>
                                     </ul>
                                 </div>
                             </li>
+                            {% else %}
+                            <li>
+                                <a href="{% url 'login' %}">Login</a>
+                            </li>
+                            {% endif %}
                         </ul>
 
                     </div>
