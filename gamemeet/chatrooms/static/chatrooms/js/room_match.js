@@ -45,6 +45,9 @@ const app = new Vue({
             }
             return cookieValue;
         }("csrftoken");
+
+        // マッチング登録状況をリセットする
+        this.quit();
     },
 
     methods: {
