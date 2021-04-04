@@ -14,25 +14,36 @@
 
 
 {% block content %}
-<h1>My Chat</h1>
+<div class="uk-container uk-margin-top">
+    <h1>My Chat</h1>
 
-<div id="user-info">
-    Username: {{ user.pk }}
-</div>
+    <div id="app">
+        <div id="matching-div" v-show="showMatching">
+            <button id="start-button" v-on:click="start">Start</button>
+            <button id="quit-button" v-on:click="quit">Quit</button>
+        </div>
+        <div id="confirm-div" v-show="showConfirm">
+            <button id="confirm-button" v-on:click="confirm(); clearDisplayTimer()">Confirm</button>
+            <button id="cancel-button" v-on:click="cancel(); clearDisplayTimer()">Cancel</button>
+        </div>
 
-<div id="app">
-    <div id="matching-div" v-show="showMatching">
-        <button id="start-button" v-on:click="start">Start</button>
-        <button id="quit-button" v-on:click="quit">Quit</button>
+        <div class="uk-margin">
+            <div class="uk-margin">
+                <input class="uk-input" type="text" placeholder="Title">
+            </div>
+            <div class="uk-margin">
+                <select v-model="number">
+
+                </select>
+                <input class="uk-input" type="number" placeholder="Number">
+
+            </div>
+        </div>
+
     </div>
-    <div id="confirm-div" v-show="showConfirm">
-        <button id="confirm-button" v-on:click="confirm(); clearDisplayTimer()">Confirm</button>
-        <button id="cancel-button" v-on:click="cancel(); clearDisplayTimer()">Cancel</button>
-    </div>
 
+    <ul id="list-message"></ul>
 </div>
-
-<ul id="list-message"></ul>
 
 {% csrf_token %}
 <script type="text/javascript">
@@ -40,7 +51,7 @@
     const unregisterUrl = "{% url 'chatrooms:unregister_matching' %}";
     const getMatchRoomUrl = "{% url 'chatrooms:get_match_room' %}";
     const confirmUrl = "{% url 'chatrooms:confirm_matching' %}";
-    const cancelUrl= "{% url 'chatrooms:cancel_confirm' %}";
+    const cancelUrl = "{% url 'chatrooms:cancel_confirm' %}";
     const isCompletedUrl = "{% url 'chatrooms:get_match_completed' %}";
 </script>
 <script type="text/javascript" src="{% static 'chatrooms/js/room_match.js' %}"></script>

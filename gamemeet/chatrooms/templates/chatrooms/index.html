@@ -2,6 +2,10 @@
 
 {% block title %}Index{% endblock %}
 
-{% block body %}
-<h1>HOME PAGE</h1>
+{% block content %}
+<div class="uk-container uk-margin-top">
+    <h1>HOME PAGE</h1>
+    <a href="{% url 'chatrooms:room_match' %}">Game Match</a>
+</div>
+
 {% endblock %}
