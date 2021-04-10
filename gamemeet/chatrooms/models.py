@@ -14,7 +14,7 @@ class Tag(models.Model):
 
 class Topic(models.Model):
     name = models.CharField(_('topic name'), max_length=255)
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
 
 class Room(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
