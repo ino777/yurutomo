@@ -9,6 +9,13 @@ User = get_user_model()
 
 # Create your models here.
 
+class Tag(models.Model):
+    name = models.CharField(_('tag name'), max_length=255)
+
+class Topic(models.Model):
+    name = models.CharField(_('topic name'), max_length=255)
+    tags = models.ManyToManyField(Tag)
+
 class Room(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
 
@@ -21,7 +28,7 @@ class Room(models.Model):
 
 class MatchingRecord(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    game_name = models.CharField(_('game name'),max_length=255)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, null=True)
     number = models.IntegerField(_('number of users'), default=2)
     submission_time = models.DateTimeField(_('submission time'), default=timezone.now)
 

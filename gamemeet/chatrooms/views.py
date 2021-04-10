@@ -11,7 +11,7 @@ from django.views import generic
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 
-from .models import Room, MatchingRecord
+from .models import Room, MatchingRecord, Topic
 
 User = get_user_model()
 
@@ -73,12 +73,25 @@ def skyway(request):
     return render(request, 'chatrooms/skyway.html')
 
 
+"""
+検索API
+"""
+def search_gamename(request):
+    json_data =json.loads(request.body)
+
+    search_text = json_data.get('search_text')
+    if search_text is None:
+        return JsonResponse({}, status=400)
+
+    
+    return JsonResponse({}, status=200)
 
 
-'''
+
+"""
 マッチング処理の WebAPI
 Ajax で Json の送受信をすることを前提に書いている
-'''
+"""
 
 # マッチングに登録
 @login_required
@@ -90,6 +103,11 @@ def register_matching(request):
     condition = json_data.get('condition')
     if condition is None:
         return JsonResponse({}, status=400)
+    
+    # 条件のバリデーション
+    topic = Topic.objects.get(name=condition['topic'])
+    if topic is None:
+        return JsonResponse({}, status=400)
 
     # 既に待ち状態であれば登録しない
     record = MatchingRecord.objects.filter(user=user_id, is_active=True).first()
@@ -99,7 +117,7 @@ def register_matching(request):
     submission_time = timezone.now()
     defaults = {
         'user': User.objects.get(pk=user_id),
-        'game_name': condition['game_name'],
+        'topic': topic,
         'number': condition['number'],
         'submission_time': submission_time,
         'is_active': True,
@@ -168,7 +186,7 @@ def get_match_room(request):
     '''
     # マッチングするものがあるか検索
     match_records = MatchingRecord.objects.filter(
-        game_name=myrecord.game_name,
+        topic=myrecord.topic,
         number=myrecord.number,
         is_active=True,
         is_pending=False,

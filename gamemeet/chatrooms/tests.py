@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.test import Client
 
-from .models import Room, MatchingRecord
+from .models import Room, MatchingRecord, Topic
 
 User = get_user_model()
 
@@ -14,12 +14,13 @@ class MatchingRegisterTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
 
     # ログインしていない場合
     def test_not_logged_in(self):
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 3
             }
         }
@@ -40,15 +41,15 @@ class MatchingRegisterTests(TestCase):
 
     # 既に登録済みの場合
     def test_already_registered(self):
-        game_name = 'Test game'
+        topic = 'Test'
         number = 3
-        record = MatchingRecord.objects.create(user=self.user, game_name=game_name, number=number, is_active=True)
+        record = MatchingRecord.objects.create(user=self.user, topic=self.topic, number=number, is_active=True)
         record.save()
 
         self.client.force_login(self.user)
         post_data = {
             'condition': {
-                'game_name': game_name,
+                'topic': topic,
                 'number': number
             }
         }
@@ -62,7 +63,7 @@ class MatchingRegisterTests(TestCase):
 
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 3
             }
         }
@@ -83,6 +84,7 @@ class MatchingUnregisterTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
 
     # ログインしていない場合
     def test_not_logged_in(self):
@@ -101,9 +103,9 @@ class MatchingUnregisterTests(TestCase):
     
     # マッチング登録をしている場合
     def test_registered(self):
-        game_name = 'Test game'
+        topic = 'Test'
         number = 3
-        record = MatchingRecord.objects.create(user=self.user, game_name=game_name, number=number, is_active=True)
+        record = MatchingRecord.objects.create(user=self.user, topic=self.topic, number=number, is_active=True)
 
         self.client.force_login(self.user)
         response = self.client.post(reverse('chatrooms:unregister_matching'), data=json.dumps({}), content_type='application/json')
@@ -123,6 +125,7 @@ class GetMatchRoomTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
     
     # ログインしていない場合
     def test_not_logged_in(self):
@@ -142,7 +145,7 @@ class GetMatchRoomTests(TestCase):
         self.client.force_login(self.user)
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 1
             }
         }
@@ -157,7 +160,7 @@ class GetMatchRoomTests(TestCase):
         self.client.force_login(self.user)
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 1
             }
         }
@@ -176,7 +179,7 @@ class GetMatchRoomTests(TestCase):
         self.client.force_login(self.user)
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 2
             }
         }
@@ -195,7 +198,7 @@ class GetMatchRoomTests(TestCase):
 
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 2
             }
         }
@@ -221,7 +224,7 @@ class GetMatchRoomTests(TestCase):
         
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': user_counts
             }
         }
@@ -242,6 +245,7 @@ class MatchingConfirmTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
     
     # ログインしていない場合
     def test_not_logged_in(self):
@@ -256,7 +260,7 @@ class MatchingConfirmTests(TestCase):
         self.client.force_login(self.user)
         MatchingRecord.objects.create(
             user=self.user,
-            game_name='Test game',
+            topic=self.topic,
             number=3,
             is_active=True,
             is_pending=False)
@@ -269,7 +273,7 @@ class MatchingConfirmTests(TestCase):
         self.client.force_login(self.user)
         MatchingRecord.objects.create(
             user=self.user,
-            game_name='Test game',
+            topic=self.topic,
             number=3,
             is_active=True,
             is_pending=True)
@@ -290,6 +294,7 @@ class CancelConfirmTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
     
     # ログインしていない場合
     def test_not_logged_in(self):
@@ -304,7 +309,7 @@ class CancelConfirmTests(TestCase):
         self.client.force_login(self.user)
         MatchingRecord.objects.create(
             user=self.user,
-            game_name='Test game',
+            topic=self.topic,
             number=3,
             is_active=True,
             is_confirmed=False)
@@ -317,7 +322,7 @@ class CancelConfirmTests(TestCase):
         self.client.force_login(self.user)
         MatchingRecord.objects.create(
             user=self.user,
-            game_name='Test game',
+            topic=self.topic,
             number=3,
             is_active=True,
             is_pending=False,
@@ -339,6 +344,7 @@ class MatchingCompleteTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
             'testuser', 'test@gmail.com', 'password')
+        self.topic = Topic.objects.create(name='Test')
     
     # ログインしていない場合
     def test_not_logged_in(self):
@@ -384,7 +390,7 @@ class MatchingCompleteTests(TestCase):
 
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': 2
             }
         }
@@ -417,7 +423,7 @@ class MatchingCompleteTests(TestCase):
         
         post_data = {
             'condition': {
-                'game_name': 'Test game',
+                'topic': 'Test',
                 'number': user_counts
             }
         }

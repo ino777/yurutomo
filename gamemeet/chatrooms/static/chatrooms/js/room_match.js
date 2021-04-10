@@ -27,7 +27,7 @@ const app = new Vue({
             completeWaitTimerId: null,
         },
 
-        gamename: "",
+        topic: "",
         number: 0,
         numberLimit: 10,
 
@@ -60,7 +60,7 @@ const app = new Vue({
     computed: {
         // マッチングボタン押せない
         btnDisable: function(){
-            return (this.gamename.length == 0) || (this.number <= 0)
+            return (this.topic.length == 0) || (this.number <= 0)
         }
     },
 
@@ -69,16 +69,16 @@ const app = new Vue({
         //  this でVueインスタンスにアクセスできるように、コールバック関数はアロー関数にしている
         //
 
-        // gamenameをセット
-        setGamename: function(event) {
-            this.gamename = event.target.innerText;
+        // topicをセット
+        setTopic: function(event) {
+            this.topic = event.target.innerText;
         },
 
         // マッチング登録
         start: function () {
             axios.post(this.url.register, {
                 condition: {
-                    game_name: this.gamename,
+                    topic: this.topic,
                     number: this.number
                 }
             }, {
@@ -244,7 +244,7 @@ const app = new Vue({
         }
     },
     mounted: function(){
-        this.searchText = this.gamename
+        this.searchText = this.topic
     },
 
     beforeDestroy() {
