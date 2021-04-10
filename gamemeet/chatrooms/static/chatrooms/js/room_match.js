@@ -1,7 +1,7 @@
 
 const app = new Vue({
-    delimiters: ['[[', ']]'],
-    el: "#app",
+    delimiters: ["[[", "]]"],
+    el: "#room-match",
     data: {
         url: {
             register: registerUrl,
@@ -15,16 +15,24 @@ const app = new Vue({
         csrftoken: null,
 
         showMatching: true,
+        showWaiting: false,
         showConfirm: false,
 
-        roomId: '',
-        roomUrl: '',
+        roomId: "",
+        roomUrl: "",
 
         timer: {
             matchingWaitTimerId: null,
             confirmDisplayTimerId: null,
             completeWaitTimerId: null,
-        }
+        },
+
+        gamename: "",
+        number: 0,
+        numberLimit: 10,
+
+        // contenteditable 用の変数
+        searchText: "",
     },
 
     created: function () {
@@ -49,19 +57,29 @@ const app = new Vue({
         // マッチング登録状況をリセットする
         this.quit();
     },
+    computed: {
+        // マッチングボタン押せない
+        btnDisable: function(){
+            return (this.gamename.length == 0) || (this.number <= 0)
+        }
+    },
 
     methods: {
         //
         //  this でVueインスタンスにアクセスできるように、コールバック関数はアロー関数にしている
         //
 
+        // gamenameをセット
+        setGamename: function(event) {
+            this.gamename = event.target.innerText;
+        },
 
         // マッチング登録
         start: function () {
             axios.post(this.url.register, {
                 condition: {
-                    game_name: "Test game",
-                    number: 2
+                    game_name: this.gamename,
+                    number: this.number
                 }
             }, {
                 headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken },
@@ -83,6 +101,7 @@ const app = new Vue({
         // マッチング登録解除
         quit: function () {
             this.showConfirm = false;
+            this.showWaiting = false;
             this.showMatching = true;
 
             // マッチングをやめる
@@ -150,7 +169,8 @@ const app = new Vue({
         // マッチングを待つ
         setMatchingWaitTimer: function (interval) {
             this.showConfirm = false;
-            this.showMatching = true;
+            this.showMatching = false;
+            this.showWaiting = true;
             this.timer.matchingWaitTimerId = setInterval((function getRoomId() {
                 axios.get(this.url.getMatchRoom)
                     .then((result) => {
@@ -163,6 +183,7 @@ const app = new Vue({
 
                             // 最長10秒間承認ボタンを表示
                             this.showMatching = false;
+                            this.showWaiting = false;
                             this.showConfirm = true;
                             this.timer.confirmDisplayTimerId = setTimeout(this.quit, 10000);
                         }
@@ -179,6 +200,7 @@ const app = new Vue({
         setCompleteWaitTimer: function (interval) {
             this.showConfirm = true;
             this.showMatching = false;
+            this.showWaiting = false;
             this.timer.completeWaitTimerId = setInterval((function getMatchCompleted() {
                 axios.get(this.url.isCompleted, {
                     params: {
@@ -220,6 +242,9 @@ const app = new Vue({
                 return getMatchCompleted;
             }).bind(this), interval)
         }
+    },
+    mounted: function(){
+        this.searchText = this.gamename
     },
 
     beforeDestroy() {

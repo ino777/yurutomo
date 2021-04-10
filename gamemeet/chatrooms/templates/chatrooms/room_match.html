@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<link rel="stylesheet" href="{% sass_src 'chatrooms/css/room_match.sass' %}">
+{% endblock %}
 
 {% block js %}
 <!-- Vue.js 開発ver -->
@@ -15,27 +20,40 @@
 
 {% block content %}
 <div class="uk-container uk-margin-top">
-    <h1>My Chat</h1>
-
-    <div id="app">
-        <div id="matching-div" v-show="showMatching">
-            <button id="start-button" v-on:click="start">Start</button>
-            <button id="quit-button" v-on:click="quit">Quit</button>
-        </div>
-        <div id="confirm-div" v-show="showConfirm">
-            <button id="confirm-button" v-on:click="confirm(); clearDisplayTimer()">Confirm</button>
-            <button id="cancel-button" v-on:click="cancel(); clearDisplayTimer()">Cancel</button>
-        </div>
-
-        <div class="uk-margin">
-            <div class="uk-margin">
-                <input class="uk-input" type="text" placeholder="Title">
+    <div class="uk-flex">
+            <h1 class="uk-align-center">Game match</h1>
+    </div>
+    
+    <div id="room-match" class="uk-margin-top">
+        <div class="uk-flex uk-flex-center uk-height-xsmall">
+            <div id="matching-div" v-show="showMatching">
+                <button id="start-btn" class="matching-btn" :disabled="btnDisable" v-on:click="start">Start</button>
             </div>
-            <div class="uk-margin">
-                <select v-model="number">
+            <div id="matching-div" v-show="showWaiting">
+                <span id="waiting-message" class=""> <button id="quit-btn" class="matching-btn"
+                        v-on:click="quit">×</button> Waiting...</span>
 
+            </div>
+
+            <div id="confirm-div" v-show="showConfirm">
+                <button id="confirm-btn" class="matching-btn"
+                    v-on:click="confirm(); clearDisplayTimer()">Confirm</button>
+                <button id="cancel-btn" class="matching-btn"
+                    v-on:click="cancel(); clearDisplayTimer()">Cancel</button>
+            </div>
+        </div>
+
+
+
+        <div class="uk-margin uk-flex uk-flex-center">
+            <div class="uk-width-1-2">
+                <div class="uk-input" v-text="searchText" @input="setGamename" contenteditable="true" placeholder="Title"></div>
+            </div>
+            <div class="uk-width-small">
+                <select class="uk-select" v-model="number">
+                    <option hidden value="0" selected style="text-align: center;">Number</option>
+                    <option v-for="n of numberLimit" :key="n" :value="n" style="text-align: center;">[[n]]</option>
                 </select>
-                <input class="uk-input" type="number" placeholder="Number">
 
             </div>
         </div>
