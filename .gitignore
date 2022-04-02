@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 
+migrations/
 
 local_settings.py
 
