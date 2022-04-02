@@ -54,7 +54,9 @@
                                 </a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
-                                        <li class="uk-active"><h5>{{user.username}}</h5></li>
+                                        <li class="uk-active">
+                                            <h5>{{user.username}}</h5>
+                                        </li>
                                         <li class="uk-nav-divider"></li>
                                         <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">Profile</a></li>
                                         <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -62,6 +64,9 @@
                                 </div>
                             </li>
                             {% else %}
+                            <li>
+                                <a href="{% url 'accounts:signup' %}">Signup</a>
+                            </li>
                             <li>
                                 <a href="{% url 'login' %}">Login</a>
                             </li>
