@@ -5,43 +5,65 @@
 
 {% block content %}
 <!-- <h1>Here is Login form </h1> -->
-<div class="uk-container uk-margin-large-top">
-     <div class="uk-flex uk-flex-center uk-height-xsmall">
-        <div class="container">
-            {% if form.non_field_errors %}
-            <div id="non-field-errors" class="">
-                <button type="button" class="close" data-dismiss="alert">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ form.non_field_errors }}
-            </div>
-            {% endif %}
-
-
-            <div id="login-form-container">
-                <form method="post">
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="row justify-content-center">
-                        <div class="field">
-                            {{ field.label }}
+<div class="uk-section" uk-height-viewport>
+    <div class="uk-width-1-1">
+        <div class="uk-container">
+            <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid>
+                <div class="uk-width-1-1@m">
+                    <div class="uk-flex uk-flex-center">
+                        {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                        <div class="uk-alert-warning uk-width-large" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ error }}</p>
                         </div>
-                        <div class="field">
-                            {{ field }}
+                        {% endfor %}
+                        {% endif %}
+
+                        {% if form.errors %}
+                        {% for field in form %}
+                        {%for error in field.errors %}
+                        <div class="uk-alert-warning uk-width-large" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ error }}</p>
                         </div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% endif %}
                     </div>
-                    {% endfor %}
-
-                    <div class="row">
-                        <div class="">
-                            <button type="submit" class="btn">
-                                <div>
-                                    Sign in
+                    <div
+                        class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
+                        <h3 class="uk-card-title uk-text-center">Login Form</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="uk-margin">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                                    {{form.username}}
                                 </div>
-                            </button>
-                        </div>
+                            </div>
+                            <div class="uk-margin">
+                                <div class="uk-inline uk-width-1-1">
+                                    <span class="uk-form-icon" uk-icon="icon: lock"></span>
+                                    {{form.password}}
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <button class="uk-button uk-button-primary uk-button-large uk-width-1-1"
+                                    type="submit">Login</button>
+                            </div>
+                            <div class="uk-text-small uk-text-center">
+                                Not registered? <a href="{% url 'accounts:signup' %}">Create an account</a>
+                            </div>
+
+                            <div class="uk-margin">
+                                <button class="uk-button uk-button-secondary uk-button-large uk-width-1-1">
+                                    Login as a guest
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

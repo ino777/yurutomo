@@ -1,39 +1,70 @@
 {% extends 'base.html' %}
 
 {% block title %}Signup{% endblock %}
+
 {% block content %}
+<div class="uk-section" uk-height-viewport>
+    <div class="uk-width-1-1">
+        <div class="uk-container">
+            <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid>
+                <div class="uk-width-1-1@m">
+                    <div class="uk-flex uk-flex-center">
+                        {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                        <div class="uk-alert-warning uk-width-large" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ error }}</p>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
 
-<div class="container">
-    <div id="sign-up-form-container">
-        <form method="post">
-            {% csrf_token %}
-            <div id="non-field-errors">
-                {{ form.non_field_errors }}
-            </div>
-            {% for field in form %}
-            <div class="row">
-                <div class="field">
-                    {{ field.label }}
-                </div>
-                <div class="field">
-                    {{ field }}
-                </div>
-                <div class="field">
-                    <div class="field_help_text">{{ field.help_text }}</div>
-                </div>
-                <div class="field">
-                    {% if field.errors %}
-                    <div class="field_error_text">{{ field.errors }}</div>
-                    {% endif %}
-                </div>
-            </div>
-            {% endfor %}
+                        {% if form.errors %}
+                        {% for field in form %}
+                        {%for error in field.errors %}
+                        <div class="uk-alert-warning uk-width-large" uk-alert>
+                            <a class="uk-alert-close" uk-close></a>
+                            <p>{{ error }}</p>
+                        </div>
+                        {% endfor %}
+                        {% endfor %}
+                        {% endif %}
+                    </div>
 
-            <div class="row">
-                <div class=""><button type="submit" class="btn">Send</button></div>
+                    <div
+                        class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
+                        <h3 class="uk-card-title uk-text-center">Signup Form</h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="uk-margin">
+                                <label class="uk-form-label">{{form.username.label}}</label>
+                                <div class="uk-inline uk-width-1-1">
+                                    {{form.username}}
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <label class="uk-form-label">{{form.email.label}}</label>
+                                <div class="uk-inline uk-width-1-1">
+                                    {{form.email}}
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <label class="uk-form-label">{{form.password1.label}}</label>
+                                <div class="uk-inline uk-width-1-1">
+                                    {{form.password1}}
+                                </div>
+                                <div class="uk-text-small uk-text-right">
+                                    <p>{{form.password1.help_text}}</p>
+                                </div>
+                            </div>
+                            <div class="uk-margin">
+                                <button class="uk-button uk-button-primary uk-button-large uk-width-1-1"
+                                    type="submit">Signup</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
-
 {% endblock %}

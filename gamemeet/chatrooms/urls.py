@@ -5,8 +5,8 @@ from . import views
 app_name= 'chatrooms'
 
 urlpatterns = [
-    # path('', views.IndexView.as_view(), name='index'),
-    path('', views.RoomMatchView.as_view(), name='index'),
+    path('', views.IndexView.as_view(), name='index'),
+    path('room-match', views.RoomMatchView.as_view(), name='room_match'),
     path('room/<uuid:pk>', views.RoomView.as_view(), name='room'),
     path('skyway', views.skyway, name='skyway'),
     path('rooms', views.RoomListView.as_view(), name='room_list'),

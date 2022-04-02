@@ -24,8 +24,6 @@ app_name = 'accounts'
 
 urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
-    path('signup/done', views.SignUpDoneView.as_view(), name='signup_done'),
-    path('signup/complete/<token>', views.SignUpCompleteView.as_view(), name='signup_complete'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
     path('settings/<uuid:pk>', views.ChangeSettingsView.as_view(), name='settings'),
