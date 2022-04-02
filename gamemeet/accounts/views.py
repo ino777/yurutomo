@@ -22,9 +22,7 @@ User = get_user_model()
 # Create your views here.
 class SignUpView(generic.CreateView):
     """
-    User creation view\n
-    Send authentication email to registered email address
-    User's is_active param is still False here
+    User creation view
     """
     form_class = UserCreateForm
     template_name = 'accounts/signup.html'

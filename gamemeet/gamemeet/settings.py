@@ -154,15 +154,6 @@ AUTH_USER_MODEL = 'accounts.User'
 # Default activation timeout (1day)
 ACTIVATION_TIMEOUT_SECONDS = 60*60*24
 
-# Email settings
-# Need a permission of access from low level of safety app (in Gmail Account settings)
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = ''
-
 
 # Channels
 ASGI_APPLICATION = 'gamemeet.asgi.application'

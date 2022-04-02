@@ -17,11 +17,11 @@ class CustomUserCreationForm(UserCreationForm):
     """ User creation form """
     class Meta:
         model = User
-        fields = ('email',)
+        fields = '__all__'
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('uuid', 'email', 'password')}),
+        (None, {'fields': ('uuid', 'password')}),
         (_('Personal info'), {
             'fields': ('username', 'icon_image')
         }),
@@ -35,16 +35,16 @@ class CustomUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'password1', 'password2'),
+            'fields': ('username', 'password1', 'password2'),
         }),
     )
     readonly_fields = ('uuid', 'last_login', 'reg_date')
 
     # form = CustomUserChangeForm
     # add_form = CustomUserCreationForm
-    list_display = ('username', 'email', 'reg_date', 'last_login', 'is_active', 'is_staff')
+    list_display = ('username', 'reg_date', 'last_login', 'is_active', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
-    search_fields = ('email', 'username')
-    ordering = ('email',)
+    search_fields = ('username',)
+    ordering = ('username',)
 
 admin.site.register(User, CustomUserAdmin)
