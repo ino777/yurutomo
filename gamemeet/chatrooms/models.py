@@ -28,10 +28,18 @@ class Tag(models.Model):
 
 class Topic(models.Model):
     name = models.CharField(_('topic name'), max_length=255)
+    number = models.IntegerField(_('number'), default=2)
     tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
         return self.name
+    
+    def data(self):
+        d = {
+            "name": self.name,
+            "number": self.number
+        }
+        return d
     
     def save(self, *args, **kwargs):
         self.full_clean()

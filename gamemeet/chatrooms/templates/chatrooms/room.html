@@ -98,9 +98,7 @@
                                 <img :src="memberIcons[message.srcUserId]" class="message-icon-img">
                             </div>
                             <div class="message-body">
-                                <div class="message-user">[[message.srcUser]]</div>
-                                <!--
-                                -->
+                                <span class="message-user">[[message.srcUser]]</span>
                                 <div class="message-data">[[message.data]]</div>
                             </div>
                         </div>
@@ -118,7 +116,7 @@
                     <div class="textarea-box">
                         <div class="text-dummy" aria-hidden="true">[[myText + "\u200b"]]</div>
                         <textarea class="textarea scroll-none" id="my-text" v-model="myText"
-                            placeholder="Message"></textarea>
+                            @keydown.enter.shift.exact.prevent="sendMessage" placeholder="Message"></textarea>
                     </div>
                     <div class="text-btn-container">
                         <button id="send-btn" class="text-btn icon-btn-container" @click="sendMessage">
@@ -154,13 +152,13 @@
                         <img :src="memberIcons[id]" class="stream-img remote-stream-img"
                             :class="{'stream-on-sound': stream.onSound}">
                     </div>
-                    <div class="stream-name">[[ memberNames[id] ]][[stream.onSound]][[stream.isMuted]] </div>
+                    <div class="stream-name">[[ memberNames[id] ]]</div>
                 </div>
                 <context-menu ref="ctx" @ctx-open="onCtxOpen">
                     <li class="ctx-item" v-if="ctxDatas.isMuted" @click="switchMute(streams[ctxDatas.id])">ミュート解除</li>
                     <li class="ctx-item" v-else @click="switchMute(streams[ctxDatas.id])">ミュート</li>
                 </context-menu>
-                <button @click="getLog">Log</button>
+                <!-- <button @click="getLog">Log</button> -->
             </div>
         </div>
     </div>

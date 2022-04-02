@@ -1,26 +1,28 @@
+#matching-message
+    display: flex
+    
 
 .matching-btn
     color: #ffffffde
     width: 10rem
     height: 3rem
     font-size: 1.2rem
+    margin: 0 auto
     border: none
     border-radius: 100vh
     outline: none
     cursor: pointer
 
-    
 #start-btn
     background: #24c1ff
 
-    &:hover
+    &:hover, &:focus
         background: #00b7ff
 
     &:disabled
         background: #ddddddde
         cursor: auto
 
-    
 #waiting-message
     font-size: 1.5rem
 
@@ -31,7 +33,7 @@
     background: white
     border: 1px solid gray
 
-    &:hover
+    &:hover, &:focus
         color: #dadada
         background: #3d3d3d
 
@@ -44,19 +46,58 @@
 #cancel-btn
     color: #5a5a5a
     background: #d8d8d8
-    
 
     &:hover
         background: #d3d3d3
-    
-    
 
-[contenteditable=true]:empty:before
-    content: attr(placeholder)
-    pointer-events: none
-    display: block
+#cancel-topic
+    outline: none
 
-div[contenteditable=true]
-    content: ""
+    &:hover, &:focus
+        color: black
 
+#life-bar
+    margin: 0 auto
+    width: 300px
+    height: 5px
+    background-color: rgba(37, 37, 37, 0.6)
+    display: flex
+    padding: 3px 3px
 
+    #life-guage
+        height: 5px
+        background-color: rgb(0, 255, 255)
+        transition: 300ms
+
+    #life-mark
+        width: 5px
+        height: 5px
+        border-radius: 5px
+        background-color: rgb(255, 255, 255)
+        filter: saturate(500%)
+
+.topic-card
+    position: relative
+    display: flex
+    justify-content: center
+    height: 3.2rem
+    padding: 10px 10px
+    border: 0.5px solid #ddddde
+    cursor: pointer
+
+    &:focus
+        outline: auto
+
+    &:hover, &:active
+        outline: #bbbbbb solid 0.5px
+
+    .topic-body
+        margin: auto
+        overflow: hidden
+        text-overflow: ellipsis
+
+.selected-topic-card
+    cursor: auto
+
+    &:hover, &:active
+        outline: none

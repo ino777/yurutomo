@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.http import QueryDict
 from django.http.response import JsonResponse, HttpResponse
 from django.views import generic
@@ -76,15 +77,41 @@ def skyway(request):
 """
 検索API
 """
-def search_gamename(request):
-    json_data =json.loads(request.body)
+def popular_topics(request):
+    params = request.GET
 
-    search_text = json_data.get('search_text')
-    if search_text is None:
+    # TODO
+    # Topicにpopularityカラムを追加
+    result = Topic.objects.all()
+    return JsonResponse({"topics": [topic.data() for topic in result]}, status=200)
+
+
+def search_topics(request):
+    params = request.GET
+
+    search_text = params.get('search_text')
+    if search_text is None or not search_text:
         return JsonResponse({}, status=400)
-
     
-    return JsonResponse({}, status=200)
+    if search_text == '/all':
+        # allコマンド = 全データ
+        query = Q()
+    else:
+        keywords = search_text.split()
+
+        query = Q()
+        for keyword in keywords:
+            query &= (
+                Q(name__icontains=keyword)
+                | Q(name__istartswith=keyword)
+                | Q(name__iendswith=keyword)
+                | Q(tags__name__icontains=keyword)
+                | Q(tags__name__istartswith=keyword)
+                | Q(tags__name__iendswith=keyword)
+            )
+
+    result = Topic.objects.filter(query)
+    return JsonResponse({"topics": [topic.data() for topic in result]}, status=200)
 
 
 
@@ -181,9 +208,9 @@ def get_match_room(request):
             },
             status=200)
 
-    '''
+    """
     マッチングできるかチェック
-    '''
+    """
     # マッチングするものがあるか検索
     match_records = MatchingRecord.objects.filter(
         topic=myrecord.topic,
@@ -213,9 +240,9 @@ def get_match_room(request):
             }, status=200)
 
 
-    '''
+    """
     ルームを作成
-    '''
+    """
     # 既に作られているか
     room = Room.objects.filter(
         users=user_id,

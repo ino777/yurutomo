@@ -4,6 +4,9 @@ const app = new Vue({
     el: "#room-match",
     data: {
         url: {
+            popularTopics: popularTopicsUrl,
+            searchTopics: searchTopicsUrl,
+
             register: registerUrl,
             unregister: unregisterUrl,
             getMatchRoom: getMatchRoomUrl,
@@ -14,25 +17,38 @@ const app = new Vue({
         param: {},
         csrftoken: null,
 
+        // マッチング待ち中か
+        isMatching: false,
+
         showMatching: true,
         showWaiting: false,
         showConfirm: false,
+
+        lifeGuageWidth: 100,
 
         roomId: "",
         roomUrl: "",
 
         timer: {
+            matchingMessageTimerId: null,
+            lifeGuageTimerId: null,
+
             matchingWaitTimerId: null,
             confirmDisplayTimerId: null,
             completeWaitTimerId: null,
         },
 
+        matchingMessageText: "",
+
+        // topic関連
+        popularTopics: [],
+        searchText: "",
+        searchResult: [],
+
         topic: "",
         number: 0,
         numberLimit: 10,
 
-        // contenteditable 用の変数
-        searchText: "",
     },
 
     created: function () {
@@ -56,6 +72,7 @@ const app = new Vue({
 
         // マッチング登録状況をリセットする
         this.quit();
+        this.matchingMessageText = "";
     },
     computed: {
         // マッチングボタン押せない
@@ -69,13 +86,66 @@ const app = new Vue({
         //  this でVueインスタンスにアクセスできるように、コールバック関数はアロー関数にしている
         //
 
+        // マッチングメッセージを一定時間表示
+        flashMatchingMessage: function(text, time=3000){
+            this.matchingMessageText = text;
+            this.matchingMessageTimerId = setTimeout(() => {
+                this.matchingMessageText = "";
+            }, time);
+        },
+
+        // topicを取得
+        getPopularTopics: function(){
+            axios.get(this.url.popularTopics, {
+                params:{}
+            }).then((result) => {
+                this.popularTopics = result.data.topics;
+            })
+        },
+
+        // topicを検索
+        searchTopics: function(event, text=""){
+            if (text.length == 0 && this.searchText.length == 0) {
+                this.searchResult = [];
+                return;
+            }
+
+            axios.get(this.url.searchTopics, {
+                params: {
+                    search_text: text || this.searchText,
+                }
+            }).then((result) => {
+                this.searchResult = result.data.topics;
+            })
+        },
+
         // topicをセット
-        setTopic: function(event) {
-            this.topic = event.target.innerText;
+        setTopic: function(data) {
+            this.topic = data.name;
+            this.number = data.number;
+        },
+
+        startLifeGuage: function() {
+            const totalTime = 10000;
+            this.lifeGuageWidth = 100;
+            let speed = this.lifeGuageWidth / totalTime * 1.1; 
+
+            this.timer.lifeGuageTimerId = setInterval(() => {
+                if (this.lifeGuageWidth < 0) {
+                    return
+                }
+                this.lifeGuageWidth -= speed * 100;
+            }, 100)
+        },
+
+        stopLifeGuage: function(){
+            clearInterval(this.timer.lifeGuageTimerId);
         },
 
         // マッチング登録
         start: function () {
+            this.isMatching = true;
+
             axios.post(this.url.register, {
                 condition: {
                     topic: this.topic,
@@ -85,7 +155,6 @@ const app = new Vue({
                 headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken },
             })
                 .then((result) => {
-                    console.log(result.data);
                     if (!result.data.is_registered) {
                         return;
                     }
@@ -100,6 +169,7 @@ const app = new Vue({
 
         // マッチング登録解除
         quit: function () {
+            this.isMatching = false;
             this.showConfirm = false;
             this.showWaiting = false;
             this.showMatching = true;
@@ -107,14 +177,13 @@ const app = new Vue({
             // マッチングをやめる
             this.clearAllTimer();
 
+            this.flashMatchingMessage("マッチングをキャンセルしました");
+
             axios.post(this.url.unregister, {}, {
                 headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken }
             })
                 .then((result) => {
-                    console.log(result.data);
-                    if (result.data.is_unregistered) {
-                        console.log("quit");
-                    }
+                    //
                 })
                 .catch((error) => {
                     console.log(error);
@@ -123,6 +192,7 @@ const app = new Vue({
 
         // マッチング承認
         confirm: function () {
+            this.stopLifeGuage();
             axios.post(this.url.confirm, {}, {
                 headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken }
             })
@@ -143,6 +213,7 @@ const app = new Vue({
 
         // マッチング承認をキャンセル
         cancelConfirm: function () {
+            this.stopLifeGuage();
             return axios.post(this.url.cancel, {}, {
                 headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken }
             })
@@ -178,13 +249,13 @@ const app = new Vue({
                         if (result.data.is_matched) {
                             this.roomId = result.data.room_id;
                             this.roomUrl = result.data.room_url;
-                            console.log(this.roomId);
                             clearInterval(this.timer.matchingWaitTimerId);
 
                             // 最長10秒間承認ボタンを表示
                             this.showMatching = false;
                             this.showWaiting = false;
                             this.showConfirm = true;
+                            this.startLifeGuage();
                             this.timer.confirmDisplayTimerId = setTimeout(this.quit, 10000);
                         }
                     })
@@ -210,7 +281,8 @@ const app = new Vue({
                     .then((result) => {
                         // 誰かがキャンセルしたとき
                         if (result.data.is_cancelled) {
-                            console.log("CANCELLED");
+                            this.flashMatchingMessage("他のユーザーがキャンセルしました");
+
                             clearInterval(this.timer.completeWaitTimerId);
 
                             // 自分も承認をキャンセル
@@ -228,7 +300,6 @@ const app = new Vue({
                         // マッチング完了したとき
                         if (result.data.is_completed) {
                             clearInterval(this.timer.completeWaitTimerId);
-                            console.log("COMPLETE!");
 
                             // ルームへ移動
                             location.href = this.roomUrl;
@@ -244,10 +315,10 @@ const app = new Vue({
         }
     },
     mounted: function(){
-        this.searchText = this.topic
+        this.getPopularTopics();
     },
 
     beforeDestroy() {
-        this.clearAllTimer();
+        this.quit();
     }
 })

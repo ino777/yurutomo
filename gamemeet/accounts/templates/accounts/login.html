@@ -5,51 +5,45 @@
 
 {% block content %}
 <!-- <h1>Here is Login form </h1> -->
-
-<div class="text-center">
-    <a href="{% url 'chatrooms:index' %}" id="top">
-        <span>
-            TOP
-        </span>
-
-    </a>
-</div>
-
-<div class="container">
-    {% if form.non_field_errors %}
-    <div id="non-field-errors" class="">
-        <button type="button" class="close" data-dismiss="alert">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ form.non_field_errors }}
-    </div>
-    {% endif %}
-
-
-    <div id="login-form-container">
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-            <div class="row justify-content-center">
-                <div class="field">
-                    {{ field.label }}
-                </div>
-                <div class="field">
-                    {{ field }}
-                </div>
+<div class="uk-container uk-margin-large-top">
+     <div class="uk-flex uk-flex-center uk-height-xsmall">
+        <div class="container">
+            {% if form.non_field_errors %}
+            <div id="non-field-errors" class="">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ form.non_field_errors }}
             </div>
-            {% endfor %}
+            {% endif %}
 
-            <div class="row">
-                <div class="">
-                    <button type="submit" class="btn">
-                        <div>
-                            Sign in
+
+            <div id="login-form-container">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="row justify-content-center">
+                        <div class="field">
+                            {{ field.label }}
                         </div>
-                    </button>
-                </div>
+                        <div class="field">
+                            {{ field }}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="">
+                            <button type="submit" class="btn">
+                                <div>
+                                    Sign in
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

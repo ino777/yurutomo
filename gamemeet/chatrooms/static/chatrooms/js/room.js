@@ -9,6 +9,9 @@ const room = new Vue({
     },
     data: {
         isMounted: false,
+        timer: {
+            scrollingTimerId: null,
+        },
 
         // デバイス情報
         audios: [],
@@ -47,12 +50,15 @@ const room = new Vue({
         // チャット
         myText: "",         // 自分のテキスト
         messages: [],       // チャット欄
-
+        isScrolling: false, // スクロール中か
 
         // テキストエリアの高さ
         // テキストエリアが可変なため、１つ前の状態の高さも保持する
         prevTextareaHeight: document.querySelector(".textarea-container").clientHeight,
         textareaHeight: document.querySelector(".textarea-container").clientHeight,
+
+        // メッセージ欄のスクロール高さ
+        messageScrollHeight: document.querySelector(".messages-container").scrollHeight,
     },
     computed: {
         messageHeight: function () {
@@ -72,9 +78,20 @@ const room = new Vue({
                 })
             }
         },
+
+        // メッセージの追加削除を検知して、メッセージ欄のスクロール高さを取得する
+        messages: {
+            immediate: true,
+            handler() {
+                this.$nextTick(function () {
+                    this.messageScrollHeight = document.querySelector(".messages-container").scrollHeight
+                })
+            }
+        },
+
         // テキストエリアの高さの変化を検知して、メッセージ欄をスクロールする
         textareaHeight: function () {
-            let deltaHeight = this.textareaHeight - this.prevTextareaHeight
+            const deltaHeight = this.textareaHeight - this.prevTextareaHeight
             if (deltaHeight > 0) {
                 // レンダリングを一度待つ
                 this.$nextTick(function () {
@@ -83,6 +100,16 @@ const room = new Vue({
             } else {
                 document.querySelector(".messages-container").scrollBy(0, deltaHeight);
             }
+        },
+
+        // メッセージ欄のスクロール高さの変化を検知して、メッセージ欄の一番下に行く
+        messageScrollHeight: function () {
+            // スクロール中は移動しない
+            if (this.isScrolling) {
+                return;
+            }
+            const element = document.querySelector(".messages-container");
+            element.scrollTo(0, this.messageScrollHeight);
         }
     },
     methods: {
@@ -281,12 +308,12 @@ const room = new Vue({
             // 他の人がルーム入室時処理
             this.room.on("peerJoin", peerId => {
                 // streams に追加
-                this.$set(this.streams, peerId, { stream: null, onSound: false, isMuted: false })
-
+                this.$set(this.streams, peerId, { stream: null, onSound: false, isMuted: false });
+                const user = this.memberNames[this.peerId];
                 this.messages.push(
                     {
                         type: "log",
-                        data: `=== ${peerId} joined === `,
+                        data: `=== ${user} joined === `,
                     }
                 )
             });
@@ -295,11 +322,11 @@ const room = new Vue({
             this.room.on("peerLeave", peerId => {
                 // streams から削除
                 this.$delete(this.streams, peerId)
-
+                const user = this.memberNames[this.peerId];
                 this.messages.push(
                     {
                         type: "log",
-                        data: `=== ${peerId} left === `,
+                        data: `=== ${user} left === `,
                     }
                 )
             });
@@ -355,5 +382,15 @@ const room = new Vue({
                 }
             });
         }, 1000);
+
+
+        // メッセージ欄スクロールのフラグ処理
+        document.querySelector(".messages-container").addEventListener("scroll", (e) => {
+            this.isScrolling = true;
+            clearTimeout(this.timer.scrollingTimerId);
+            this.timer.scrollingTimerId = setTimeout(() => {
+                this.isScrolling = false;
+            }, 500)
+        })
     }
 })

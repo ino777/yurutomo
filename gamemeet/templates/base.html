@@ -1,3 +1,6 @@
+{% load static %}
+{% load sass_tags %}
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -10,6 +13,14 @@
         integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
     <!-- UIkit CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.6.17/dist/css/uikit.min.css" />
+
+    <link rel="stylesheet" href="{% sass_src 'chatrooms/css/common.sass' %}">
+    <!-- データバインディング完了まで要素の描画を遅らせる -->
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
     {% block css %}{% endblock %}
 
     <!-- UIkit JS -->
@@ -22,7 +33,7 @@
 <body>
     {% block navbar %}
     <div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky;">
-        <nav class="uk-navbar-container" style="position: relative; z-index: 980;">
+        <nav class="uk-navbar-container" style="position: relative; z-index: 980; background-color: #464646;">
             <div class="uk-container uk-container-expand">
                 <div uk-navbar>
                     <div class="uk-navbar-left">
@@ -38,11 +49,12 @@
                             {% if user.is_authenticated %}
                             <li>
                                 <a href="#">
-                                        <img src="{{user.icon_image.url}}" style="width: 50px; height: 50px; border-radius: 50%;" >
+                                    <img src="{{user.icon_image.url}}"
+                                        style="width: 40px; height: 40px; border-radius: 50%;">
                                 </a>
                                 <div class="uk-navbar-dropdown">
                                     <ul class="uk-nav uk-navbar-dropdown-nav">
-                                        <li class="uk-active">{{user.username}}</li>
+                                        <li class="uk-active"><h5>{{user.username}}</h5></li>
                                         <li class="uk-nav-divider"></li>
                                         <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">Profile</a></li>
                                         <li><a href="{% url 'logout' %}">Logout</a></li>
