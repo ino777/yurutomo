@@ -6,6 +6,7 @@ const app = new Vue({
         url: {
             popularTopics: popularTopicsUrl,
             searchTopics: searchTopicsUrl,
+            createTopic: createTopicUrl,
 
             register: registerUrl,
             unregister: unregisterUrl,
@@ -45,6 +46,9 @@ const app = new Vue({
         searchText: "",
         searchResult: [],
 
+        newTopic: "",
+        newTopicError: "",
+
         topic: "",
         number: 0,
         numberLimit: 10,
@@ -76,7 +80,7 @@ const app = new Vue({
     },
     computed: {
         // マッチングボタン押せない
-        btnDisable: function(){
+        btnDisable: function () {
             return (this.topic.length == 0) || (this.number <= 0)
         }
     },
@@ -87,7 +91,7 @@ const app = new Vue({
         //
 
         // マッチングメッセージを一定時間表示
-        flashMatchingMessage: function(text, time=3000){
+        flashMatchingMessage: function (text, time = 3000) {
             this.matchingMessageText = text;
             this.matchingMessageTimerId = setTimeout(() => {
                 this.matchingMessageText = "";
@@ -95,16 +99,16 @@ const app = new Vue({
         },
 
         // topicを取得
-        getPopularTopics: function(){
+        getPopularTopics: function () {
             axios.get(this.url.popularTopics, {
-                params:{}
+                params: {}
             }).then((result) => {
                 this.popularTopics = result.data.topics;
             })
         },
 
         // topicを検索
-        searchTopics: function(event, text=""){
+        searchTopics: function (event, text = "") {
             if (text.length == 0 && this.searchText.length == 0) {
                 this.searchResult = [];
                 return;
@@ -119,15 +123,51 @@ const app = new Vue({
             })
         },
 
-        // topicをセット
-        setTopic: function(data) {
-            this.topic = data.name;
+        // topicを追加
+        createTopic: function () {
+            this.newTopic = this.newTopic.trim();
+            if ((this.newTopic.length <= 0) || (this.newTopic.length > 255)) {
+                console.log("Invalid name length");
+                return;
+            }
+            axios.post(this.url.createTopic, {
+                name: this.newTopic,
+            }, {
+                headers: { "Content-type": "application/json", "X-CSRFToken": this.csrftoken },
+            })
+                .then((result) => {
+                    if (!result.data.is_created) {
+                        this.newTopicError = "※そのトピックは既に存在します";
+                        return;
+                    }
+
+                    this.newTopicError = "";
+                    this.setTopic(this.newTopic);
+                    // モーダルを閉じる
+                    const m = document.querySelector(".modal");
+                    UIkit.modal(m).hide();
+
+                })
         },
 
-        startLifeGuage: function() {
+        // topicをセット
+        setTopic: function (name) {
+            this.topic = name;
+        },
+
+        // 長い名前は後半を切り捨てる
+        cleanTopicName: function (name) {
+            let cleanedName = name.toString();
+            if (cleanedName.length >= 31) {
+                cleanedName = cleanedName.slice(0, 30) + "...";
+            }
+            return cleanedName;
+        },
+
+        startLifeGuage: function () {
             const totalTime = 10000;
             this.lifeGuageWidth = 100;
-            let speed = this.lifeGuageWidth / totalTime * 1.1; 
+            let speed = this.lifeGuageWidth / totalTime * 1.1;
 
             this.timer.lifeGuageTimerId = setInterval(() => {
                 if (this.lifeGuageWidth < 0) {
@@ -137,7 +177,7 @@ const app = new Vue({
             }, 100)
         },
 
-        stopLifeGuage: function(){
+        stopLifeGuage: function () {
             clearInterval(this.timer.lifeGuageTimerId);
         },
 
@@ -241,7 +281,7 @@ const app = new Vue({
             this.showConfirm = false;
             this.showMatching = false;
             this.showWaiting = true;
-            this.timer.matchingWaitTimerId = setInterval((function getRoomId() {
+            this.timer.matchingWaitTimerId = setInterval((getRoomId = () => {
                 axios.get(this.url.getMatchRoom)
                     .then((result) => {
                         // マッチングした場合
@@ -263,7 +303,7 @@ const app = new Vue({
                         this.quit();
                     })
                 return getRoomId;
-            }).bind(this), interval)
+            })(), interval)
         },
 
         // マッチング承認を待つ
@@ -271,7 +311,7 @@ const app = new Vue({
             this.showConfirm = true;
             this.showMatching = false;
             this.showWaiting = false;
-            this.timer.completeWaitTimerId = setInterval((function getMatchCompleted() {
+            this.timer.completeWaitTimerId = setInterval((getMatchCompleted = () => {
                 axios.get(this.url.isCompleted, {
                     params: {
                         room_id: this.roomId
@@ -310,10 +350,10 @@ const app = new Vue({
                         this.quit();
                     })
                 return getMatchCompleted;
-            }).bind(this), interval)
+            })(), interval)
         }
     },
-    mounted: function(){
+    mounted: function () {
         this.getPopularTopics();
     },
 

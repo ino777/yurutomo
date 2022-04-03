@@ -86,9 +86,9 @@
                     </div>
                     <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-match" uk-grid>
                         <div v-for="(result, id) in searchResult">
-                            <button class="uk-card uk-card-default topic-card" @click="setTopic(result)">
+                            <button class="uk-card uk-card-default topic-card" @click="setTopic(result.name)">
                                 <div class="topic-body">
-                                    [[result.name]]
+                                    [[ cleanTopicName(result.name) ]]
                                 </div>
                             </button>
                         </div>
@@ -101,15 +101,33 @@
                 <div>
                     <div class="uk-margin">
                         <h3>
-                            トピック
+                            トピック　<a href="#topic-add-modal" uk-icon="plus-circle" uk-toggle uk-tooltip="新しいトピックを追加しよう"></a>
                         </h3>
+                    </div>
+
+                    <div id="topic-add-modal" class="modal" uk-modal>
+                        <div class="uk-modal-dialog uk-modal-body">
+                            <button class="uk-modal-close-default" type="button" uk-close></button>
+                            <h2 class="uk-modal-title">トピックの追加</h2>
+                            <div class="uk-flex uk-flex-center">
+                                <input v-model="newTopic" class="uk-input uk-form-width-large" type="text"
+                                    placeholder="追加したいトピック">
+                            </div>
+                            <p>
+                                [[ newTopicError ]]
+                            </p>
+                            <p class="uk-text-right">
+                                <button class="uk-button uk-button-primary" type="button"
+                                    v-on:click="createTopic">決定</button>
+                            </p>
+                        </div>
                     </div>
 
                     <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-match" uk-grid>
                         <div v-for="(result, id) in popularTopics">
-                            <button class="uk-card uk-card-default topic-card" @click="setTopic(result)">
+                            <button class="uk-card uk-card-default topic-card" @click="setTopic(result.name)">
                                 <div class="topic-body">
-                                    [[result.name]]
+                                    [[cleanTopicName(result.name) ]]
                                 </div>
                             </button>
                         </div>
@@ -154,6 +172,7 @@
 <script type="text/javascript">
     const popularTopicsUrl = "{% url 'chatrooms:popular_topics' %}"
     const searchTopicsUrl = "{% url 'chatrooms:search_topics' %}"
+    const createTopicUrl = "{% url 'chatrooms:create_topic' %}"
 
     const registerUrl = "{% url 'chatrooms:register_matching' %}";
     const unregisterUrl = "{% url 'chatrooms:unregister_matching' %}";

@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('api/populartopics', views.popular_topics, name='popular_topics'),
     path('api/searchtopics', views.search_topics, name='search_topics'),
+    path('api/createtopic', views.create_topic, name='create_topic'),
 
     path('api/registermatching', views.register_matching, name='register_matching'),
     path('api/unregistermatching', views.unregister_matching, name='unregister_matching'),

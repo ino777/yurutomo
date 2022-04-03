@@ -114,6 +114,21 @@ def search_topics(request):
     return JsonResponse({"topics": [topic.data() for topic in result]}, status=200)
 
 
+"""
+トピック追加API
+"""
+def create_topic(request):
+    json_data = json.loads(request.body)
+
+    name = json_data.get('name')
+    topic, created = Topic.objects.update_or_create(
+        name=name
+    )
+    if not created:
+        return JsonResponse({'is_created': False, 'message': 'A topic with the same name already exists.'})
+    topic.save()
+    return JsonResponse({'is_created': True}, status=200)
+
 
 """
 マッチング処理の WebAPI
