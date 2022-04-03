@@ -1,5 +1,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="uk-container uk-margin-large-top">
+    <div class="uk-width-1-1@m">
+        <div>
+            <h2 class="uk-text-center">Profile Edit</h3>
+        </div>
+    </div>
+    <div class="uk-width-1-1@m">
+        <div class="uk-flex uk-flex-center">
+            <div class="uk-flex uk-flex-column">
+                {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                <div class="uk-alert-warning uk-width-large" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>{{ error }}</p>
+                </div>
+                {% endfor %}
+                {% endif %}
 
+                {% if form.errors %}
+                {% for field in form %}
+                {%for error in field.errors %}
+                <div class="uk-alert-warning uk-width-large" uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>{{ error }}</p>
+                </div>
+                {% endfor %}
+                {% endfor %}
+                {% endif %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="uk-margin">
+                        <label class="uk-form-label uk-text-large">{{form.username.label}}</label>
+                        <div class="uk-margin-small uk-width-1-1 uk-text-center">
+                            {{form.username}}
+                        </div>
+                    </div>
+                    <div class="uk-margin">
+                        <label class="uk-form-label uk-text-large">{{form.icon_image.label}}</label>
+                        <div class="uk-margin-small uk-width-1-1 uk-text-center">
+                            <img class="uk-width-medium" src="{{ user.icon_image.url }}" alt="user_icon_image">
+
+                        </div>
+                        <div class="uk-margin-small uk-width-1-1 uk-text-center">
+                            {{form.icon_image}}
+                        </div>
+                    </div>
+                    <div class="uk-margin-large-top">
+                        <button class="uk-button uk-button-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

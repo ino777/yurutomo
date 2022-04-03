@@ -35,6 +35,7 @@ class UserCreateForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     """ Login form """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Username'
@@ -44,14 +45,11 @@ class LoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs['class'] = 'uk-input uk-form-width-large'
         self.fields['password'].widget.attrs['placeholder'] = 'Password'
 
-
-    
     def non_field_errors(self):
         error_messages = super().non_field_errors()
         if error_messages:
             error_messages[0] = 'Incorrect Username or Password'
         return error_messages
-
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -73,4 +71,9 @@ class ProfileForm(ModelForm):
     """ Profile settings form """
     class Meta:
         model = User
-        fields = ('icon_image',)
+        fields = ('username', 'icon_image')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'Username'
+        self.fields['username'].widget.attrs['class'] = 'uk-input uk-form-width-large'
