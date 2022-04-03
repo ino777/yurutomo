@@ -145,7 +145,7 @@ USER_ICON_UPLOAD_DIR = 'uploads/icon/'
 
 # Redirect after login
 LOGIN_URL = 'accounts:login'
-LOGIN_REDIRECT_URL = 'chatrooms:index'
+LOGIN_REDIRECT_URL = 'chatrooms:room_match'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 # Default User model

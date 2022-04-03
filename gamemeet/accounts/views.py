@@ -28,7 +28,7 @@ class SignUpView(generic.CreateView):
     """
     form_class = UserCreateForm
     template_name = 'accounts/signup.html'
-    success_url = reverse_lazy('chatrooms:index')
+    success_url = reverse_lazy('chatrooms:room_match')
 
     def form_valid(self, form):
         user = form.save()
@@ -37,7 +37,6 @@ class SignUpView(generic.CreateView):
         return HttpResponseRedirect(self.get_success_url())
     
     def form_invalid(self, form):
-        messages.warning(self.request, 'form invalid!!')
         return super().form_invalid(form)
 
 
@@ -68,7 +67,7 @@ class Logout(LoginRequiredMixin, LogoutView):
 
 
 class GuestLogin(generic.RedirectView):
-    url = reverse_lazy('chatrooms:index')
+    url = reverse_lazy('chatrooms:room_match')
     
     def get(self, request):
         # ゲストログイン
@@ -107,11 +106,11 @@ class ChangeSettingsView(LoginRequiredMixin, UserPassesTestMixin, generic.Update
         return reverse_lazy('chatrooms:index')
 
     def form_valid(self, form):
-        messages.success(self.request, 'saved successfully!')
+        messages.success(self.request, '正常に更新されました')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'not saved - alert!')
+        messages.warning(self.request, '更新に失敗しました')
         return super().form_invalid(form)
 
 
@@ -128,12 +127,12 @@ class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateV
         return current_user.pk == page_user.pk or current_user.is_superuser
 
     def get_success_url(self):
-        return reverse_lazy('chatrooms:index')
+        return reverse_lazy('accounts:profile_settings', kwargs={'pk': self.request.user.pk})
 
     def form_valid(self, form):
-        messages.success(self.request, 'saved successfully!')
+        messages.success(self.request, '正常に更新されました')
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.warning(self.request, 'not saved - alert!')
+        messages.warning(self.request, '更新に失敗しました')
         return super().form_invalid(form)

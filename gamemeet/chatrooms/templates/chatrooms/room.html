@@ -29,7 +29,7 @@
         <div class="tools-container">
             <div class="tool" id="leave-room">
                 <button class="tool-btn" id="leave-room-btn" @click="leaveRoom">
-                    Exit <i class="fas fa-door-open"></i>
+                    退室 <i class="fas fa-door-open"></i>
                 </button>
             </div>
 
@@ -49,14 +49,14 @@
                 <div id="modal-settings" uk-modal>
                     <div id="select-audio" class="uk-modal-dialog uk-modal-body" uk-overflow-auto>
                         <button class="uk-modal-close-default" type="button" uk-close></button>
-                        <h3 class="uk-modal-title">Settings</h3>
+                        <h3 class="uk-modal-title">設定</h3>
 
                         <ul class="uk-list uk-list-square">
                             <li>
                                 <div>
-                                    <h5>Audio Input</h5>
+                                    <h5>マイク</h5>
                                     <select v-model="selectedAudio" @change="onDeviceChange">
-                                        <option disabled value="">Audio Input</option>
+                                        <option disabled value=""></option>
                                         <option v-for="(audio, i) in audios" :key="i" :value="audio.deviceId">
                                             [[audio.label]]
                                         </option>
@@ -135,13 +135,13 @@
             <div class="streams">
                 <div class="stream local-stream">
                     <audio id="my-video" autoplay playsinline :src-object.prop="localStream.stream"></audio>
-                    <div>
+                    <div class="uk-margin-xsmall">
                         <img src="{{user.icon_image.url}}" class="stream-img local-stream-img"
                             :class="{'stream-on-sound' : localStream.onSound}">
                     </div>
                     <!-- 環境によって srcObject.prop と src-object.prop のどちらかで動く模様 -->
                     <!-- <video id="my-video" width="400px" autoplay muted playsinline :srcObject.prop="localStream"></video> -->
-                    <div class="stream-name">[[ truncateName("{{ user.username }}") ]]
+                    <div class="stream-name uk-margin-xsmall">[[ truncateName("{{ user.username }}") ]]
                     </div>
                 </div>
 

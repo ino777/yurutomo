@@ -287,7 +287,7 @@ const room = new Vue({
                 this.messages.push(
                     {
                         type: "log",
-                        data: "=== You joined === ",
+                        data: "=== あなたが入室しました === ",
                     }
                 )
             });
@@ -300,7 +300,7 @@ const room = new Vue({
                 this.messages.push(
                     {
                         type: "log",
-                        data: "=== You left === ",
+                        data: "=== あなたが退室しました === ",
                     }
                 )
             });
@@ -313,7 +313,7 @@ const room = new Vue({
                 this.messages.push(
                     {
                         type: "log",
-                        data: `=== ${user} joined === `,
+                        data: `=== ${user} が入室しました === `,
                     }
                 )
             });
@@ -326,7 +326,7 @@ const room = new Vue({
                 this.messages.push(
                     {
                         type: "log",
-                        data: `=== ${user} left === `,
+                        data: `=== ${user} が退室しました === `,
                     }
                 )
             });

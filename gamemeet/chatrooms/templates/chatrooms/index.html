@@ -3,9 +3,24 @@
 {% block title %}Index{% endblock %}
 
 {% block content %}
-<div class="uk-container uk-margin-top">
-    <h1>HOME PAGE</h1>
-    <a href="{% url 'chatrooms:room_match' %}">Game Match</a>
+<div uk-height-viewport="offset-top: true; offset-bottom: true"
+    class="uk-section uk-section-small uk-flex uk-flex-middle uk-text-center uk-height-viewport"
+    style="min-height: calc((100vh - 80px) - 102.5px);">
+    <div class="uk-width-1-1">
+        <div class="uk-container">
+            <h2 class="uk-heading-medium">ゆるとも</h2>
+            <p class="uk-margin-medium uk-text-lead">
+                ゆるともは気軽に話し相手を探せる場所です！
+            </p>
+            <div uk-grid="" class="uk-child-width-auto uk-grid-medium uk-flex-inline uk-flex-center uk-grid">
+                <div class="uk-first-column">
+                    <a href="{% url 'chatrooms:room_match' %}" class="uk-button uk-button-primary uk-button-large">
+                        はじめる
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

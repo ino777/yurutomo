@@ -33,7 +33,7 @@
                     </div>
                     <div
                         class="uk-margin uk-width-large uk-margin-auto uk-card uk-card-default uk-card-body uk-box-shadow-large">
-                        <h3 class="uk-card-title uk-text-center">Login Form</h3>
+                        <h3 class="uk-card-title uk-text-center">ログイン</h3>
                         <form method="post">
                             {% csrf_token %}
                             <div class="uk-margin">
@@ -50,15 +50,15 @@
                             </div>
                             <div class="uk-margin">
                                 <button class="uk-button uk-button-primary uk-button-large uk-width-1-1"
-                                    type="submit">Login</button>
+                                    type="submit">ログイン</button>
                             </div>
                             <div class="uk-text-small uk-text-center">
-                                Not registered? <a href="{% url 'accounts:signup' %}">Create an account</a>
+                                新規登録は<a href="{% url 'accounts:signup' %}">こちら</a>
                             </div>
 
                             <div class="uk-margin">
                                 <a href="{% url 'accounts:guest_login' %}?next={{next_path}}" class="uk-button uk-button-secondary uk-button-large uk-width-1-1">
-                                    Login as a guest
+                                    登録せずにはじめる
                                 </a>
                             </div>
                         </form>

@@ -21,8 +21,8 @@
 
 {% block content %}
 <div class="uk-container uk-margin-large-top">
-    <div class="uk-flex">
-        <h1 class="uk-align-center">Game Meet</h1>
+    <div class="uk-flex uk-flex-center">
+        <p class="uk-text-large">トピックを選んでマッチングしましょう！</p>
     </div>
 
     <div id="room-match" class="uk-margin-top" v-cloak>
@@ -34,7 +34,7 @@
             <div class="uk-flex uk-flex-center uk-height-xsmall">
 
                 <div id="matching-div" v-show="showMatching">
-                    <button id="start-btn" class="matching-btn" :disabled="btnDisable" v-on:click="start">Start</button>
+                    <button id="start-btn" class="matching-btn" :disabled="btnDisable" v-on:click="start">マッチング</button>
                 </div>
                 <div id="matching-div" v-show="showWaiting">
                     <span id="waiting-message" class=""> <button id="quit-btn" class="matching-btn"
@@ -44,9 +44,9 @@
 
                 <div id="confirm-div" v-show="showConfirm">
                     <button id="confirm-btn" class="matching-btn"
-                        v-on:click="confirm(); clearDisplayTimer()">Confirm</button>
+                        v-on:click="confirm(); clearDisplayTimer()">入室</button>
                     <button id="cancel-btn" class="matching-btn"
-                        v-on:click="cancel(); clearDisplayTimer()">Cancel</button>
+                        v-on:click="cancel(); clearDisplayTimer()">キャンセル</button>
                     <div id="life-bar" class="uk-margin">
                         <div id="life-guage" :style="{width: lifeGuageWidth + '%'}"></div>
                         <div id="life-mark"></div>
@@ -75,13 +75,13 @@
                         <button class="uk-form-icon uk-form-icon-flip" @click="searchTopics" uk-icon="icon: search"
                             style="outline: none;"></button>
                         <input class="uk-input" v-model="searchText" @keydown.enter="searchTopics" type="text"
-                            placeholder="Topic">
+                            placeholder="トピック">
                     </div>
                 </div>
                 <div class="uk-margin" v-if="searchResult.length">
                     <div class="uk-margin">
                         <h3>
-                            Search Result
+                            検索結果
                         </h3>
                     </div>
                     <div class="uk-child-width-1-2@s uk-child-width-1-3@m uk-grid-match" uk-grid>
@@ -94,12 +94,14 @@
                         </div>
                     </div>
 
-                    <hr>
+                    <div class="uk-margin-large">
+                        <hr>
+                    </div>
                 </div>
                 <div>
                     <div class="uk-margin">
                         <h3>
-                            Topics
+                            トピック
                         </h3>
                     </div>
 

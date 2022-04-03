@@ -26,11 +26,11 @@ class UserCreateForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         del self.fields['password2']
-        self.fields['username'].label = 'Username'
+        self.fields['username'].label = 'ユーザー名'
         self.fields['username'].widget.attrs['class'] = 'uk-input uk-form-width-large'
-        self.fields['password1'].label = 'Password'
+        self.fields['password1'].label = 'パスワード'
         self.fields['password1'].widget.attrs['class'] = 'uk-input uk-form-width-large'
-        self.fields['password1'].help_text = 'Make sure it\'s at least 6 characters.'
+        self.fields['password1'].help_text = 'パスワードは6文字以上'
 
 
 class LoginForm(AuthenticationForm):
@@ -38,12 +38,12 @@ class LoginForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Username'
+        self.fields['username'].label = 'ユーザー名'
         self.fields['username'].widget.attrs['class'] = 'uk-input uk-form-width-large'
-        self.fields['username'].widget.attrs['placeholder'] = 'Username'
-        self.fields['password'].label = 'Password'
+        self.fields['username'].widget.attrs['placeholder'] = 'ユーザー名'
+        self.fields['password'].label = 'パスワード'
         self.fields['password'].widget.attrs['class'] = 'uk-input uk-form-width-large'
-        self.fields['password'].widget.attrs['placeholder'] = 'Password'
+        self.fields['password'].widget.attrs['placeholder'] = 'パスワード'
 
     def non_field_errors(self):
         error_messages = super().non_field_errors()
@@ -75,5 +75,6 @@ class ProfileForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].label = 'Username'
+        self.fields['username'].label = 'ユーザー名'
         self.fields['username'].widget.attrs['class'] = 'uk-input uk-form-width-large'
+        self.fields['icon_image'].label = 'プロフィール画像'

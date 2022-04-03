@@ -59,18 +59,18 @@
                                         </li>
                                         <li class="uk-nav-divider"></li>
                                         {% if not user.is_guest %}
-                                        <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">Profile</a></li>
+                                        <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">プロフィール</a></li>
                                         {% endif %}
-                                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                                        <li><a href="{% url 'logout' %}">ログアウト</a></li>
                                     </ul>
                                 </div>
                             </li>
                             {% else %}
                             <li>
-                                <a href="{% url 'accounts:signup' %}">Signup</a>
+                                <a href="{% url 'accounts:signup' %}">新規登録</a>
                             </li>
                             <li>
-                                <a href="{% url 'login' %}">Login</a>
+                                <a href="{% url 'login' %}">ログイン</a>
                             </li>
                             {% endif %}
                         </ul>
@@ -82,6 +82,22 @@
     </div>
     {% endblock %}
     {% block content %}{% endblock %}
+    {% if messages %}
+    <div class="uk-width-1-1 uk-flex uk-flex-left" style="position:fixed; bottom:0;">
+        <div class="uk-flex uk-flex-column">
+            <ul class="uk-list">
+                {% for message in messages %}
+                <div class="uk-width-large uk-margin-remove {% if message.tags %} uk-alert-{{ message.tags }} {% endif %}"
+                    uk-alert>
+                    <a class="uk-alert-close" uk-close></a>
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
 </body>
 
 </html>
