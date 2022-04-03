@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <div id="topic-form" class="uk-margin">
+        <div id="topic-form" class="uk-margin-large-top">
             <div v-if="topic">
                 <div class="uk-flex uk-flex-center uk-child-width-1-2@s uk-child-width-1-3@m">
                     <div class="uk-card uk-card-default topic-card selected-topic-card">
@@ -118,17 +118,33 @@
             </div>
         </div>
 
-        <!-- <div id="number-form" class="uk-margin">
-            <div class="uk-flex uk-flex-center">
-                <div class="uk-width-small">
-                    <select class="uk-select" v-model="number">
-                        <option hidden value="0" selected style="text-align: center;">Number</option>
-                        <option v-for="n of numberLimit" :key="n" :value="n" style="text-align: center;">[[n]]</option>
-                    </select>
 
+        <div id="number-form" class="uk-margin">
+            <div v-if="topic">
+                <div class="uk-flex uk-flex-center">
+                    <div class="uk-flex uk-flex-column">
+                        <div v-if="isMatching">
+                            <div class="uk-text-center">
+                                [[ number ]]人マッチング
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="">
+                                何人とマッチングしますか？
+                            </div>
+                            <div class="uk-flex uk-flex-center uk-margin-small">
+                                <select class="uk-select uk-width-small" v-model="number" :hidden="isMatching">
+                                    <option hidden value="0" selected style="text-align: center;">人数</option>
+                                    <option v-for="n of numberLimit" :key="n" :value="n" style="text-align: center;">
+                                        [[n]]
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div> -->
+        </div>
     </div>
 
     <ul id="list-message"></ul>

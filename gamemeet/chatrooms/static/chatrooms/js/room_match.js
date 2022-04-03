@@ -122,7 +122,6 @@ const app = new Vue({
         // topicをセット
         setTopic: function(data) {
             this.topic = data.name;
-            this.number = data.number;
         },
 
         startLifeGuage: function() {
