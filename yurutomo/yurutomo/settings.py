@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'gamemeet.urls'
+ROOT_URLCONF = 'yurutomo.urls'
 
 TEMPLATES = [
     {
@@ -156,7 +156,7 @@ ACTIVATION_TIMEOUT_SECONDS = 60*60*24
 
 
 # Channels
-ASGI_APPLICATION = 'gamemeet.asgi.application'
+ASGI_APPLICATION = 'yurutomo.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {
