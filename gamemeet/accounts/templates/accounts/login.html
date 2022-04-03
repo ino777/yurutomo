@@ -57,9 +57,9 @@
                             </div>
 
                             <div class="uk-margin">
-                                <button class="uk-button uk-button-secondary uk-button-large uk-width-1-1">
+                                <a href="{% url 'accounts:guest_login' %}?next={{next_path}}" class="uk-button uk-button-secondary uk-button-large uk-width-1-1">
                                     Login as a guest
-                                </button>
+                                </a>
                             </div>
                         </form>
                     </div>

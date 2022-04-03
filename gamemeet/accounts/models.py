@@ -73,6 +73,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         _('active'),
         default=True,
     )
+    is_guest = models.BooleanField(
+        _('guest'),
+        default=False,
+    )
 
     reg_date = models.DateTimeField(_('registration date'), default=timezone.now)
 

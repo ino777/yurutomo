@@ -26,7 +26,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('username', 'icon_image')
         }),
         (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'groups', 'user_permissions')
+            'fields': ('is_active', 'is_staff', 'is_guest', 'groups', 'user_permissions')
         }),
         (_('Important dates'), {
             'fields': ('last_login', 'reg_date')
@@ -42,8 +42,8 @@ class CustomUserAdmin(UserAdmin):
 
     # form = CustomUserChangeForm
     # add_form = CustomUserCreationForm
-    list_display = ('username', 'reg_date', 'last_login', 'is_active', 'is_staff')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
+    list_display = ('username', 'reg_date', 'last_login', 'is_active', 'is_staff', 'is_guest')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_guest', 'groups')
     search_fields = ('username',)
     ordering = ('username',)
 

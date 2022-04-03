@@ -58,7 +58,9 @@
                                             <h5>{{user.username}}</h5>
                                         </li>
                                         <li class="uk-nav-divider"></li>
+                                        {% if not user.is_guest %}
                                         <li><a href="{% url 'accounts:profile_settings' pk=user.pk %}">Profile</a></li>
+                                        {% endif %}
                                         <li><a href="{% url 'logout' %}">Logout</a></li>
                                     </ul>
                                 </div>
