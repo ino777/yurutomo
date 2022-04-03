@@ -26,6 +26,7 @@ const app = new Vue({
         showConfirm: false,
 
         lifeGuageWidth: 100,
+        lifeBar: document.getElementById('life-progressbar'),
 
         roomId: "",
         roomUrl: "",
@@ -165,15 +166,19 @@ const app = new Vue({
         },
 
         startLifeGuage: function () {
+            this.lifeBar = document.getElementById('life-progressbar');
+            this.lifeBar.value = 100;
+
             const totalTime = 10000;
-            this.lifeGuageWidth = 100;
-            let speed = this.lifeGuageWidth / totalTime * 1.1;
+            let speed = this.lifeBar.value / totalTime * 1.1;
 
             this.timer.lifeGuageTimerId = setInterval(() => {
-                if (this.lifeGuageWidth < 0) {
-                    return
+
+                if (this.lifeBar.value < 0) {
+                    clearInterval(this.timer.lifeGuageTimerId);
+                    return;
                 }
-                this.lifeGuageWidth -= speed * 100;
+                this.lifeBar.value -= speed * 100;
             }, 100)
         },
 

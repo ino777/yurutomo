@@ -48,8 +48,7 @@
                     <button id="cancel-btn" class="matching-btn"
                         v-on:click="cancel(); clearDisplayTimer()">キャンセル</button>
                     <div id="life-bar" class="uk-margin">
-                        <div id="life-guage" :style="{width: lifeGuageWidth + '%'}"></div>
-                        <div id="life-mark"></div>
+                        <progress id="life-progressbar" class="uk-progress" value="100" max="100"></progress>
                     </div>
                 </div>
 
@@ -101,7 +100,8 @@
                 <div>
                     <div class="uk-margin">
                         <h3>
-                            トピック　<a href="#topic-add-modal" uk-icon="plus-circle" uk-toggle uk-tooltip="新しいトピックを追加しよう"></a>
+                            トピック　<a href="#topic-add-modal" uk-icon="plus-circle" uk-toggle
+                                uk-tooltip="新しいトピックを追加しよう"></a>
                         </h3>
                     </div>
 
@@ -148,7 +148,7 @@
                         </div>
                         <div v-else>
                             <div class="">
-                                何人とマッチングしますか？
+                                何人でマッチングしますか？
                             </div>
                             <div class="uk-flex uk-flex-center uk-margin-small">
                                 <select class="uk-select uk-width-small" v-model="number" :hidden="isMatching">
