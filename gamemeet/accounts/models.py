@@ -15,6 +15,12 @@ from imagekit.processors import ResizeToFill
 # Default user icon image ( /media/DEFAULT_USER_ICON_IMAGE )
 DEFAULT_USER_ICON_IMAGE = 'default-user-icon.png'
 
+def _user_icon_image_upload_to(instance, filename):
+    path = settings.USER_ICON_UPLOAD_DIR
+    ext = str(filename).split('.')[-1]
+    name = str(uuid4()) + '.' + ext
+    return '{}/{}'.format(path, name)
+
 # Create your models here.
 class UserManager(BaseUserManager):
     """ User manager """
@@ -58,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     icon_image = ProcessedImageField(
-        upload_to=settings.USER_ICON_UPLOAD_DIR,
+        upload_to=_user_icon_image_upload_to,
         processors=[ResizeToFill(200, 200)],
         format='JPEG',
         options={'quality': 60},
